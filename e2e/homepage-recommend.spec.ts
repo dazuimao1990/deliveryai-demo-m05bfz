@@ -37,8 +37,8 @@ test.describe('首页推荐菜展示 - E2E 验收测试', () => {
   test('HOME-002: 推荐菜卡片不可点击、不影响现有首页元素和桌台绑定流程', async ({ page }) => {
     await page.goto('/#/home')
 
-    // 现有首页元素仍正常展示
-    await expect(page.getByRole('heading', { name: '沸点火锅' })).toBeVisible()
+    // 现有首页元素仍正常展示：品牌标题文案、桌位选择按钮、快速进入按钮
+    await expect(page.getByText('热气升腾，')).toBeVisible()
     await expect(page.getByRole('button', { name: /A08/ }).first()).toBeVisible()
     await expect(page.getByRole('button', { name: /B12/ })).toBeVisible()
     await expect(page.getByRole('button', { name: /C06/ })).toBeVisible()
@@ -64,7 +64,7 @@ test.describe('首页推荐菜展示 - E2E 验收测试', () => {
 
     // 通过 localStorage 切换语言为英文，重新加载页面
     await page.evaluate(() => localStorage.setItem('i18nextLng', 'en'))
-    await page.goto('/#/home')
+    await page.reload()
 
     // 英文：推荐菜区域标题、菜品名称和徽章正确切换
     await expect(page.getByRole('heading', { name: "Today's Recommendations" })).toBeVisible()
