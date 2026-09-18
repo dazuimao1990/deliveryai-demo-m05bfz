@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Check, ChevronRight, MapPin, QrCode, Sparkles, Users } from 'lucide-react'
 import hotpot from '@/assets/hotpot.jpg'
+import { products } from '@/data/menu'
+import { money } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 
 const tableOptions = [
@@ -14,6 +16,7 @@ interface HomeViewProps { onBind: (table: string) => void }
 
 export function HomeView({ onBind }: HomeViewProps) {
   const { t } = useTranslation()
+  const recommendedDishes = products.filter((product) => product.badge).slice(0, 4)
   return (
     <main className="relative min-h-screen overflow-hidden bg-rice-100 paper-noise">
       <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-chili-100 blur-3xl" />
@@ -61,6 +64,32 @@ export function HomeView({ onBind }: HomeViewProps) {
           <Button onClick={() => onBind('A08')} className="mt-4 w-full"><MapPin size={17} />{t('bind.quick_enter')}</Button>
         </section>
       </div>
+
+      {recommendedDishes.length > 0 && (
+        <section className="relative mx-auto max-w-6xl px-5 pb-12 lg:px-10">
+          <div className="mb-5 flex items-center gap-2">
+            <Sparkles size={18} className="text-chili-500" />
+            <h2 className="text-xl font-extrabold text-charcoal-900 sm:text-2xl">{t('home.recommend_title')}</h2>
+          </div>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {recommendedDishes.map((product) => (
+              <article key={product.id} className="overflow-hidden rounded-2xl border border-charcoal-900/5 bg-white shadow-sm">
+                <div className="relative h-32 overflow-hidden sm:h-36">
+                  <img src={product.image} alt={t(product.name)} className="h-full w-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/30 to-transparent" />
+                  {product.badge && (
+                    <span className="absolute left-2 top-2 rounded-full bg-amber-400 px-2.5 py-0.5 text-xs font-extrabold text-charcoal-900">{t(product.badge)}</span>
+                  )}
+                </div>
+                <div className="p-3">
+                  <h3 className="truncate font-bold text-charcoal-900">{t(product.name)}</h3>
+                  <p className="mt-2 text-lg font-extrabold text-chili-500">{money(product.price)}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   )
 }
